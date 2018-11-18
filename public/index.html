@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<h1> Share Notes </h1>
+		<script type="text/javascript" src = "https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js">
+		</script>
+
+		<script type="text/javascript">
+		$(document).ready(function () {
+				// console.log($('#coursename').val())
+			$("#submitButton").click(function () {
+				$.get('/course', {course: $('#coursename').val()})
+				.done(
+					$(location).attr('href', 'index2.html')
+				)
+			})
+		})
+		</script>
+	</head>
+
+	<body>
+		<p id="test"> Choose Course Name: </p>
+		<!-- <form> -->
+			
+		<select id="coursename">
+			<option>COP5570</option>
+			<!--
+			<option value=""> </option>
+			<option value=""> </option>
+			<option value=""> </option>
+			-->
+		</select>
+		<br><br>
+		<button id="submitButton"> Submit</button>
+		<p id = "submitButton"  style="display: none"> now move to another page </p>
+		<!-- </form> -->
+	</body>
+</html>

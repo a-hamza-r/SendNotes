@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script>
+$(document).ready(function(){
+
+   var x=0;
+
+    $("#btn2").click(function(){
+        $("ol").append("<li><div> <a href=\"http://design.optimus.com/projects?currentPage=2\">Lecture</a> </div></li>");$("ol");var x=x+1;
+        $.getJSON("localhost:8080/listoflecs.json", function (jsonfile) {
+        	$("#listoflecs").html('<p> Name')
+        })
+    });
+});
+</script>
+</head>
+<body>
+
+<p>SHARE NOTE.</p>
+<p>THIS IS HTE LIST OF NOTE.</p>
+<div id="listoflecs"></div>
+<ol>
+  
+</ol>
+
+
+
+<button id="btn2">Append list items</button>
+
+</body>
+</html>
