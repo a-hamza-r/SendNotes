@@ -1,33 +1,68 @@
 <!DOCTYPE html>
 <html>
-<head>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-<script>
-$(document).ready(function(){
+	<head>
+		<style type="text/css">
+			.links {
+				color: blue;
+				cursor: pointer;
+				text-decoration: underline;
+			}
 
-   var x=0;
+		</style>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+		
+		<script>
+			var handler = function (data) {
+				// console.log(data);
+				window.localStorage.setItem("lecture_id", data)
+				window.location.assign("index3.html");
+			}
+			$(document).ready(function(){
 
-    $("#btn2").click(function(){
-        $("ol").append("<li><div> <a href=\"http://design.optimus.com/projects?currentPage=2\">Lecture</a> </div></li>");$("ol");var x=x+1;
-        $.getJSON("localhost:8080/listoflecs.json", function (jsonfile) {
-        	$("#listoflecs").html('<p> Name')
-        })
-    });
-});
-</script>
-</head>
-<body>
+				var lecture_count = 0;
 
-<p>SHARE NOTE.</p>
-<p>THIS IS HTE LIST OF NOTE.</p>
-<div id="listoflecs"></div>
-<ol>
-  
-</ol>
+			    $("#append_lecture").click(function(){
+			        lecture_count = lecture_count+1;
+					var lecture_name = "Lecture " + lecture_count;
+			        $.post('/lecture', {course_id: window.localStorage.getItem("course_id"), lecture: lecture_name})
+			        	.done(function (data) {
+					        $("ol").append($("<li>").text(lecture_name)
+					        	.attr("id", lecture_count)
+					        	.attr("class", "links")
+			        			.attr("onclick", "handler(\""+data+"\")"));
+		        		})
+				});
 
+			    $.get('/course/'+window.localStorage.getItem("course_id"))
+			    .done(function (data) {
+			    	// console.log(data)
+			    	lecture_count = data.lecture_list.length;
+			    	data.lecture_list.forEach(elem => {
+			    		// console.log(elem._id)
+			    		$.get("/lecture/"+elem._id)
+			    		.done(function (dat) {
+			    			var lect_num = dat.name.split(" ")[1]
+				    		$("ol").append($("<li>").text("Lecture "+lect_num)
+					        	.attr("id", lect_num)
+					        	.attr("class", "links")
+			        			.attr("onclick", "handler(\""+dat._id+"\")"));
+			    		})
 
+			    	})
+			    })
+			});
 
-<button id="btn2">Append list items</button>
+		</script>
+	</head>
 
-</body>
+	<body>
+
+		<h1> Share Notes </h1>
+		<p id="lec1">LECTURES AVAILABLE</p>
+		<div id="listoflecs"></div>
+		<ol></ol>
+
+		<button id="append_lecture">ADD LECTURE</button>
+
+	</body>
 </html>

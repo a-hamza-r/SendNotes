@@ -7,32 +7,34 @@
 
 		<script type="text/javascript">
 		$(document).ready(function () {
-				// console.log($('#coursename').val())
-			$("#submitButton").click(function () {
-				$.get('/course', {course: $('#coursename').val()})
-				.done(
-					$(location).attr('href', 'index2.html')
-				)
+			var coursename = $('#coursename').val()
+
+			$("#coursename").on("change", function () {
+				coursename = $(this).val()
+			})
+
+			$("#submit_button").click(function () {
+				$.post('/course', {course: coursename})
+				.done(function (data) {
+					window.localStorage.setItem("course_id", data);
+					window.location.assign("index2.html")
+				})
 			})
 		})
 		</script>
 	</head>
 
 	<body>
-		<p id="test"> Choose Course Name: </p>
-		<!-- <form> -->
+		<p> CHOOSE A COURSE: </p>
 			
 		<select id="coursename">
 			<option>COP5570</option>
-			<!--
-			<option value=""> </option>
-			<option value=""> </option>
-			<option value=""> </option>
-			-->
+			<option>COT5507</option>
+			<option>COP5611</option>
 		</select>
 		<br><br>
-		<button id="submitButton"> Submit</button>
-		<p id = "submitButton"  style="display: none"> now move to another page </p>
+		<button id="submit_button"> Submit</button>
+		<p id = "submit_button"  style="display: none"> now move to another page </p>
 		<!-- </form> -->
 	</body>
 </html>

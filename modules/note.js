@@ -2,11 +2,9 @@ var mongoose = require('mongoose');
 
 const NoteSchema = new mongoose.Schema(
 {
-	name: {
-		type: String,
-		required: true
-	}, 
-	author: String
+	name: String, 
+	file_name: String,
+	file_dest: String
 })
 
 const Note = mongoose.model('Note', NoteSchema);

@@ -3,19 +3,15 @@ require('./note')
 
 const LectureSchema = new mongoose.Schema(
 {
-	name: {
-		type: String,
-		required: true
-	}, 
+	name: String, 
 	notes_list: {
 		type: [{
 			note_id: {
-				type: mongoose.Schema.Types.ObjectId,
+				type: mongoose.Types.ObjectId,
 				ref: 'Note'
 			}
 		}]
-	},
-	count_notes: Number
+	}
 });
 
 LectureSchema.pre('save', function (next) {

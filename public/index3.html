@@ -1,20 +1,113 @@
 <!DOCTYPE html>
 <html>
 <head>
+	<style type="text/css">
+		#dropZone{
 
+			Border:3px dashed #0088cc;
+			padding:50;
+			width:200px;
+		}
+		#files{
+			border: 1px dotted #0088cc;
+			padding:50;
+			width:200px;
+			display: none;
+		}
+		#error{
+			color: red;
+		}
+	</style>
+	<style type="text/css">
+		.links {
+				color: blue;
+				cursor: pointer;
+				text-decoration: underline;
+			}
+	</style>
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+	<script>
+		var handler = function (data) {
+			// console.log(data)
+			$.get(data, function (dat) {
+				// console.log("dat");
+				console.log(dat);
+				// var reader = new FileReader();
+				// reader.onload = function(e) {
+				// 	var rawData = reader.result;
+				// }
+				// reader.readArrayAsBuffer(dat);
+				// $("<img>").attr({src: "data:image/jpeg;base64," + dat}).appendTo("body");
+
+			})
+		}
+		$(document).ready(function () {
+			var notes_count = 0;
+			$("form#data").submit(function (e) {
+				$(this).attr("action", "/upload/"+window.localStorage.getItem("lecture_id"));
+				var formData = new FormData(this)
+				e.stopPropagation();
+				e.preventDefault();
+				$.ajax({
+					url: $(this).attr("action"),
+					data: formData,
+					processData: false,
+					contentType: false,
+					type: 'POST',
+					cache: false,
+					success: function(data) {
+						// console.log(data)
+						notes_count = notes_count+1;
+						var notes_name = data.file_name;
+						$("ol").append($("<li>").text(notes_name)
+							.attr("id", data._id)
+							.attr("class", "links")
+							.attr("onclick", "handler(\""+data.file_name+"\")"));
+					}
+				})
+				return false;
+			})
+
+			$.get('/lecture/'+window.localStorage.getItem("lecture_id"))
+			.done(function (data) {
+				notes_count = data.notes_list.length;
+				data.notes_list.forEach(elem => {
+					$.get("/notes/"+elem._id)
+					.done(function (dat) {
+						// console.log(dat)
+						$("ol").append($("<li>").text(dat.file_name)
+					        	.attr("id", dat._id)
+					        	.attr("class", "links")
+					        	.attr("onclick", "handler(\""+dat.file_name+"\")"));
+					})
+				})
+			})
+
+		})
+	</script>
 
 </head>
 <body>
 
 
 
-<p>SHARE NOTE.</p>
-<p>Chose what you want to do:</p>
+	<h1>Share Notes</h1>
 
+	<div id = "dropZone"> 
 
-<button id="btn1">Show Notes</button>
+	<form id="data" method="post" action="/upload" enctype="multipart/form-data">
+	    Select file to upload:
+	    <input type="file" id="fileToUpload" name="file">
+	    <input id="upload_notes" type="submit" value="Upload Notes">
+	</form>
 
-<button id="btn2">Uplode Note</button>
+	</div>
+
+	<p>NOTES AVAILABLE</p>
+	<div id="listofnotes"></div>
+	<ol></ol>
 
 </body>
 </html>

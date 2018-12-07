@@ -3,19 +3,15 @@ require('./lecture')
 
 const ClassSchema = new mongoose.Schema(
 {
-	name: {
-		type: String,
-		required: true
-	}, 
+	name: String, 
 	lecture_list: {
 		type: [{
 			lect_id: {
-				type: mongoose.Schema.Types.ObjectId, 
+				type: mongoose.Types.ObjectId, 
 				ref: 'Lecture'
 			}
 		}]
-	},
-	count_lectures: Number
+	}
 });
 
 ClassSchema.pre('save', function(next) {
@@ -26,5 +22,4 @@ ClassSchema.pre('save', function(next) {
 })
 
 const Class = mongoose.model('Class', ClassSchema);
-
 module.exports = Class;
